@@ -291,7 +291,7 @@ def cmd_prompt():
   while True:
     try:
       # Listen for the command
-      inp = input().lower()
+      inp = listen().lower()
     except AttributeError:
       # If there's an error, continue to the top and ask again.
       continue

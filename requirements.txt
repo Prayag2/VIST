@@ -1,0 +1,4 @@
+requests
+SpeechRecognition
+gTTS
+pydub

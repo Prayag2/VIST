@@ -18,7 +18,7 @@ try:
 except ImportError:
   # if modules are not intalled, install them
   print("Please install the pre-requisites")
-  exit()
+  quit()
 
 
 # Variables
@@ -106,7 +106,7 @@ def speak(text):
     pass
   # Name of the mp3 to be played
   mp3 = 'speech.mp3'
-  txt2speech = gTTS(text=text, lang='en-uk')
+  txt2speech = gTTS(text=text, lang='en-in')
   # Save the audio as speech.mp3
   txt2speech.save(mp3)
   # Play the saved audio
@@ -117,10 +117,10 @@ def speak(text):
 def web_search(q):
   exceptions = ['search', 'search for', 'tell me about', 'what is']
   query = ''
-  for word in q.split():
-    if not word == exceptions:
-      query += word
-  query = query.split()
+  for exception in exceptions:
+    if exception in q:
+      q = q.replace(exception, '')
+  query = q.split()
   parsed_query = '+'.join(query)  # Replace spaces with '+' sign
   google_url = f'https://www.google.com/search?q={parsed_query}'
   speak("Here's what I found!")
@@ -291,7 +291,7 @@ def cmd_prompt():
   while True:
     try:
       # Listen for the command
-      inp = listen().lower()
+      inp = input().lower()
     except AttributeError:
       # If there's an error, continue to the top and ask again.
       continue

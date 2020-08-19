@@ -37,7 +37,7 @@ def install_modules():
       print("Failed to find or install pip! Please install it manually!")
       quit()
 
-  modules = ['SpeechRecognition', 'gTTS', 'pydub', 'requests']
+  modules = ['SpeechRecognition', 'gTTS', 'pydub', 'requests', 'geocoder']
   for module in modules:
     if module not in [installed[1] for installed in iter_modules()]:
       print(f"Installing {module}...")

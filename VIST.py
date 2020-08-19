@@ -5,6 +5,7 @@ try:
   from pydub.playback import play  # audio manipulator
   from pydub import AudioSegment  # audio manipulator
   import requests  # for APIs
+  import geocoder
 
   # built-in modules
   from random import choice  # gives random choice in a list
@@ -14,6 +15,7 @@ try:
   import webbrowser as wb  # web browser
   from time import sleep  # sleep
   from datetime import datetime
+
 
 except ImportError:
   # if modules are not intalled, install them
@@ -46,6 +48,11 @@ joke_api_url = 'https://official-joke-api.appspot.com/jokes/random'
 def cls():
   # Clear the console
   system('cls') if name == 'nt' else system('clear')
+
+
+def get_city():
+  g = geocoder.ip('me')
+  return g.city
 
 
 def save_to_file(data):
@@ -115,7 +122,7 @@ def speak(text):
 
 # Common functions
 def web_search(q):
-  exceptions = ['search', 'search for', 'tell me about', 'what is']
+  exceptions = ['search for', 'search', 'tell me about', 'what is']
   query = ''
   for exception in exceptions:
     if exception in q:
@@ -164,6 +171,24 @@ def jokeAPI():
     sleep(1)
     # Speak out the extracted joke punchline
     speak(json['punchline'])
+
+
+def weather_api():
+  req = requests.get(
+      f'http://api.openweathermap.org/data/2.5/weather?q={get_city()}&units=metric&appid=4153fb471c99f9f74d20c091db20bd22'
+  )
+  res = req.json()
+  main_obj = res['main']
+  wind = res['wind']
+  speak(f"The current weather in {get_city()} is {res['weather'][0]['main']}")
+  speak(f"The current temperature is {main_obj['temp']} degree celsius")
+  speak(f"The minimum temperature is {main_obj['temp_min']} degree celsius")
+  speak(f"The maximum temperature is {main_obj['temp_max']} degree celsius")
+  speak(f"Visibility is {res['visibility']}")
+  speak(f"Wind speed is {wind['speed']} kilometres per hour")
+  speak(f"Wind degree is {wind['deg']} degrees")
+  speak(f"MOST IMPORTANT STEP IS ID. THE ID IS {res['id']}")
+  pass
 
 
 # Commands' functions
@@ -284,6 +309,7 @@ def cmd_prompt():
       {'trigger_on': ['support', 'feedback'],
        'func': feedback, 'args_required': False},
       {'trigger_on': ['countdown'], 'func': countdown, 'args_required': False},
+      {'trigger_on': ['weather'], 'func': weather_api, 'args_required': False}
   ]
   # Ask the user, 'How may I help you'.
   speak("How may I help you?")
@@ -291,7 +317,7 @@ def cmd_prompt():
   while True:
     try:
       # Listen for the command
-      inp = listen().lower()
+      inp = input().lower()
     except AttributeError:
       # If there's an error, continue to the top and ask again.
       continue

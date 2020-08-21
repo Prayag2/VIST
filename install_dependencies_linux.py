@@ -2,6 +2,7 @@ import requests
 from os import system
 from subprocess import call
 from sys import version_info
+from urllib.request import urlretrieve
 
 
 def install_pip():
@@ -38,7 +39,8 @@ def install_modules():
             print("Failed to find or install pip! Please install it manually!")
             quit()
 
-    modules = ['SpeechRecognition', 'gTTS', 'pydub', 'requests', 'geocoder']
+    modules = ['SpeechRecognition', 'gTTS', 'pydub',
+               'requests', 'geocoder', 'func-timeout']
     for module in modules:
         if module not in [installed[1] for installed in iter_modules()]:
             print(f"Installing {module}...")
@@ -53,12 +55,15 @@ def install_modules():
     quit()
 
 
-def beep():
-    beep = requests.get(
-        'https://drive.google.com/uc?export=download&id=1f1UHs2yZ-LZP7yq5RdqvPGnHjjP0WG9O'
+def beep_and_could():
+    urlretrieve(
+        'https://drive.google.com/uc?export=download&id=1f1UHs2yZ-LZP7yq5RdqvPGnHjjP0WG9O',
+        'beep.mp3')
+    urlretrieve(
+        'https://drive.google.com/uc?export=download&id=1g6wM9N05Zem1rwSbJnG9N0PC1MNR487A',
+        'couldYouSayThatAgain.mp3'
     )
-    open('beep.mp3', 'wb').write(beep.content)
 
 
 install_modules()
-beep()
+beep_and_could()

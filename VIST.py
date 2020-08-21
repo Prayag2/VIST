@@ -1,4 +1,5 @@
 try:
+    import threading
     # external modules
     import speech_recognition as sr  # for speech to text
     from gtts import gTTS  # google text to speech
@@ -6,6 +7,7 @@ try:
     from pydub import AudioSegment  # audio manipulator
     import requests  # for APIs
     import geocoder
+    from func_timeout import func_timeout, FunctionTimedOut
 
     # built-in modules
     from random import choice  # gives random choice in a list
@@ -13,7 +15,7 @@ try:
     from sys import platform, version_info, exit  # system module
     from os import system, name, path, remove  # os module
     import webbrowser as wb  # web browser
-    from time import sleep  # sleep
+    from time import sleep, time  # sleep
     from datetime import datetime
 
 
@@ -69,7 +71,12 @@ def get_mics():
         which_mic = input("? ")
         if not which_mic:
             raise ValueError("Please input something")
+        elif which_mic > len(new_list_of_mics):
+            raise TypeError("Please enter a correct number!")
     except ValueError:
+        speak("Please input something")
+        main()
+    except TypeError:
         speak("Please input something")
         main()
     else:
@@ -106,22 +113,26 @@ def exitam():
 
 # Request and response function
 def listen():
-    if path.isfile('config.txt'):
-        with open('config.txt', 'r') as f:
-            data = literal_eval(f.read())
-            m = data['mic']
-    # 314 778 293 s577wt
-    # Configure the recognizer
-    r = sr.Recognizer()
-    # Listen the microphone for any voice
-    with sr.Microphone(device_index=m) as source:
-        # Adjust mic according to ambient noise
-        r.adjust_for_ambient_noise(source, duration=0.5)
-        print("Listening...")
-        # Play the beep
+    def audio_equals_r_dot_listen(r, source):
+        print("Listening..")
         play(AudioSegment.from_mp3(beep))
-        # Make a variable with the listened voice
         audio = r.listen(source)
+        return audio
+
+    m = data['mic']
+    r = sr.Recognizer()
+    while True:
+        with sr.Microphone(device_index=m) as source:
+            r.adjust_for_ambient_noise(source, duration=0.5)
+            try:
+                audio = func_timeout(
+                    20, audio_equals_r_dot_listen, args=(r, source)
+                )
+                break
+            except FunctionTimedOut:
+                print("Could you say that again?")
+                play(AudioSegment.from_mp3('couldYouSayThatAgain.mp3'))
+                continue
     try:
         # Recognize the audio using Google
         print(r.recognize_google(audio))
@@ -129,8 +140,9 @@ def listen():
         play(AudioSegment.from_mp3(beep))
         return r.recognize_google(audio)
     except sr.UnknownValueError:
-        # If voice isn't recognized
-        speak("Could you say that again?")
+        speak('Voice not clear! Please repeat!')
+    except sr.RequestError:
+        speak("Server didn't respond!")
 
 
 def speak(text):
@@ -387,12 +399,15 @@ def main():
     global data
 
     def save_to_file(data):
-        with open('config.txt', 'a') as file:
+        with open('config.txt', 'w') as file:
             file.write(str(data))
 
     # Save details in a config file
-    def save_config(mic_key, mic_value, name_key, name_value):
+    def save_name(name_key, name_value):
         data[str(name_key)] = name_value
+        save_to_file(data)
+
+    def save_mic(mic_key, mic_value):
         data[str(mic_key)] = mic_value
         save_to_file(data)
 
@@ -411,13 +426,15 @@ def main():
                 main()
             else:
                 # Speak one of the greetings in the greetings list and the name of the user
+                m = get_mics()
+                save_mic('mic', m)
                 speak(f"{choice(greetings)}, {data['name']}!")
     else:
-        m = get_mics()
+
         speak("Hey there! I am Vist, your virtual and personal assistant! Can you please enter your name?")
         name = input("? ")
         speak(f'That\'s a nice name, {name}!')
-        save_config('mic', m, 'name', name)
+        save_name('name', name)
 
 
 if __name__ == "__main__":

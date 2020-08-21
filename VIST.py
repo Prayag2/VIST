@@ -26,6 +26,7 @@ except ImportError:
 # Variables
 beep = 'beep.mp3'
 data = {}
+microphone = None
 greetings = ['Namaste', 'Ram Ram', 'Jai Jinendra',
              'Jai Shri Krishna', 'Satsriaakaal', 'Hello', 'Hi']
 what_am_i_doing_list = ['I am talking to you right now!',
@@ -50,6 +51,29 @@ joke_api_url = 'https://official-joke-api.appspot.com/jokes/random'
 def cls():
     # Clear the console
     system('cls') if name == 'nt' else system('clear')
+
+
+def get_mics():
+    mics = sr.Microphone.list_microphone_names()
+    new_list_of_mics = []
+    for id, mic in enumerate(mics):
+        if mic == ' - Output':
+            break
+        elif mic == ' - Input':
+            continue
+        else:
+            new_list_of_mics.append(mic)
+            print(f"{id-1} - {mic}")
+    speak("Enter the number of the mic you want to use? ")
+    try:
+        which_mic = input("? ")
+        if not which_mic:
+            raise ValueError("Please input something")
+    except ValueError:
+        speak("Please input something")
+        main()
+    else:
+        return int(which_mic)
 
 
 def get_city():
@@ -82,10 +106,15 @@ def exitam():
 
 # Request and response function
 def listen():
+    if path.isfile('config.txt'):
+        with open('config.txt', 'r') as f:
+            data = literal_eval(f.read())
+            m = data['mic']
+    # 314 778 293 s577wt
     # Configure the recognizer
     r = sr.Recognizer()
     # Listen the microphone for any voice
-    with sr.Microphone() as source:
+    with sr.Microphone(device_index=m) as source:
         # Adjust mic according to ambient noise
         r.adjust_for_ambient_noise(source, duration=0.5)
         print("Listening...")
@@ -354,15 +383,17 @@ def cmd_prompt():
 
 
 def main():
+    cls()
     global data
 
     def save_to_file(data):
-        with open('config.txt', 'w') as file:
+        with open('config.txt', 'a') as file:
             file.write(str(data))
 
     # Save details in a config file
-    def save_config(key, value):
-        data[str(key)] = value
+    def save_config(mic_key, mic_value, name_key, name_value):
+        data[str(name_key)] = name_value
+        data[str(mic_key)] = mic_value
         save_to_file(data)
 
     # Check if config.txt exists
@@ -382,15 +413,15 @@ def main():
                 # Speak one of the greetings in the greetings list and the name of the user
                 speak(f"{choice(greetings)}, {data['name']}!")
     else:
+        m = get_mics()
         speak("Hey there! I am Vist, your virtual and personal assistant! Can you please enter your name?")
         name = input("? ")
         speak(f'That\'s a nice name, {name}!')
-        save_config('name', name)
+        save_config('mic', m, 'name', name)
 
 
 if __name__ == "__main__":
     if is_internet_active():
-        cls()
         main()
         cmd_prompt()
     else:

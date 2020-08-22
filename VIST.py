@@ -123,10 +123,10 @@ def listen():
                 continue
     try:
         # Recognize the audio using Google
-        print(r.recognize_google(audio))
+        print(r.recognize_houndify(audio,'f15d0w06fvG7Ta1TT2svRQ==','IdqjZtBCikgZsU6h11a5TmRaYvMjMYJ0T-z76uHegFnIbknNCMjEDsbkRk-hL02aU_UXjIYQ1Zb0i7XKh9Jh0g=='))
         # Play the recognized audio
         play(AudioSegment.from_mp3(beep))
-        return r.recognize_google(audio)
+        return r.recognize_houndify(audio,'f15d0w06fvG7Ta1TT2svRQ==','IdqjZtBCikgZsU6h11a5TmRaYvMjMYJ0T-z76uHegFnIbknNCMjEDsbkRk-hL02aU_UXjIYQ1Zb0i7XKh9Jh0g==')
     except sr.UnknownValueError:
         speak('Voice not clear! Please repeat!')
     except sr.RequestError:

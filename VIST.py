@@ -58,29 +58,17 @@ def cls():
 def get_mics():
     mics = sr.Microphone.list_microphone_names()
     new_list_of_mics = []
-    for id, mic in enumerate(mics):
+    for id, mic in enumerate(mics, start=0):
         if mic == ' - Output':
             break
         elif mic == ' - Input':
             continue
         else:
             new_list_of_mics.append(mic)
-            print(f"{id-1} - {mic}")
+            print(f"{id} - {mic}")
     speak("Enter the number of the mic you want to use? ")
-    try:
-        which_mic = input("? ")
-        if not which_mic:
-            raise ValueError("Please input something")
-        elif which_mic > len(new_list_of_mics):
-            raise TypeError("Please enter a correct number!")
-    except ValueError:
-        speak("Please input something")
-        main()
-    except TypeError:
-        speak("Please input something")
-        main()
-    else:
-        return int(which_mic)
+    which_mic = input("? ")
+    return int(which_mic)
 
 
 def get_city():

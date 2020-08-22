@@ -6,6 +6,8 @@
 - gtts (`pip3 install gTTS`)
 - pydub (`pip3 install pydub`)
 - requests (`pip3 install requests`)
+- func_timeout (`pip3 install func_timeout`)
+- geocoder (`pip3 install geocoder`)
 
 ## Installation instructions
 
@@ -79,4 +81,4 @@ Run installer script first! Using `python3 install_dependencies_linux.py`
 
 ## Getting to know the config.txt
 
-The `config.txt` is a file that stores your name for further use and mic id. If you edit your name in the file, nothing happens, but if it finds something else, it will generate the file again by again asking your name!
+The `config.txt` is a file that stores your name for further use and mic id. If you edit your name in the file, nothing happens, but if it finds something else other than name and mic ID, it will generate the file again by again asking your name!

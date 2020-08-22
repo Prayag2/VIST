@@ -247,7 +247,10 @@ def hi():
 def show_abilities():
     # Tell about VIST's abilities
     speak(
-        "I can do math, crack some jokes and search the web for you! Try entering, 'tell me a joke'."
+        "I'm opening a webpage, there you can see the commands!"
+    )
+    wb.open_new_tab(
+        'https://github.com/adityatrips/VIST#commands-that-can-be-used-for'
     )
 
 

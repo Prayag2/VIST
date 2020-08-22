@@ -7,7 +7,7 @@
 - pydub (`pip3 install pydub`)
 - requests (`pip3 install requests`)
 
-## Problems faced while installing packages
+## Installation instructions
 
 ### Windows
 
@@ -16,7 +16,7 @@ Run installer script first! Using `python install_dependencies_win.py`
 
 ### Linux
 
-Run installer script first! Using `python3 install_dependencies_linux.py`
+Run installer script first! Using `python3 install_dependencies_linux.py` 
 
 ## Commands that can be used for
 

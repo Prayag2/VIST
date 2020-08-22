@@ -5,12 +5,31 @@ from sys import version_info
 from urllib.request import urlretrieve
 
 
+def install_ffmpeg():
+    distro_id = int(input(
+            "Please select your linux distro (1. Ubuntu/Debian, 2. Arch, 3. Fedora, 4. OpenSUSE, 5. CentOS): ")) - 1
+    commands = [['sudo apt install ffmpeg python3-pyaudio'], ['sudo pacman -R ffmpeg python3-pyaudio'],
+                ['sudo yum install epel-release', 'sudo yum install ffmpeg portaudio portaudio-devel pyaudio'],
+                ['sudo zypper addrepo https://download.opensuse.org/repositories/openSUSE:Factory/standard/openSUSE:Factory.repo && sudo zypper refresh && sudo zypper install ffmpeg python3-pyaudio'],
+                ['sudo dnf install ffmpeg ffmpeg-devel python3-pyaudio']]
+    try:
+        for command in commands[distro_id]:
+            c = command.split()
+            call(c)
+    except:
+        print("There was an error please try again!")
+    else:
+        print("ffmpeg installed!")
+
+
+
 def install_pip():
     while True:
         distro_id = int(input(
-            "Please select your linux distro (1. Ubuntu/Debian, 2. Arch, 3. Fedora, 4. OpenSUSE): ")) - 1
-        commands = [['sudo apt install python3-pip'], ['sudo pacman -S python-pip'],
-                    ['sudo yum install epel-release', 'sudo yum install python3-pip'], ['sudo zypper install python3-pip']]
+            "Please select your linux distro (1. Ubuntu/Debian, 2. Arch, 3. Fedora, 4. OpenSUSE, 5. CentOS): ")) - 1
+        commands = [['sudo apt install python3-pip'], ['sudo pacman -S python3-pip'],
+                    ['sudo yum install epel-release', 'sudo yum install python3-pip'], ['sudo zypper install python3-pip'],
+                    ['sudo dnf install python3-pip']]
         try:
             for command in commands[distro_id]:
                 c = command.split()
@@ -52,7 +71,6 @@ def install_modules():
             system('clear')
             print(f"Installed {module} successfully!")
     print("All dependencies are installed!")
-    quit()
 
 
 def beep_and_could():
@@ -66,4 +84,5 @@ def beep_and_could():
 
 
 install_modules()
+install_ffmpeg()
 beep_and_could()

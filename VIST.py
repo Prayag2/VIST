@@ -68,7 +68,11 @@ def get_mics():
             print(f"{id} - {mic}")
     speak("Enter the number of the mic you want to use? ")
     which_mic = input("? ")
-    return int(which_mic)
+
+    if which_mic.isnumeric():
+        return int(which_mic)
+    else:
+        get_mics()
 
 
 def get_city():
@@ -101,6 +105,9 @@ def exitam():
 
 # Request and response function
 def listen():
+    client_id = 'f15d0w06fvG7Ta1TT2svRQ=='
+    client_key = 'IdqjZtBCikgZsU6h11a5TmRaYvMjMYJ0T-z76uHegFnIbknNCMjEDsbkRk-hL02aU_UXjIYQ1Zb0i7XKh9Jh0g=='
+
     def audio_equals_r_dot_listen(r, source):
         print("Listening..")
         play(AudioSegment.from_mp3(beep))
@@ -123,10 +130,10 @@ def listen():
                 continue
     try:
         # Recognize the audio using Google
-        print(r.recognize_houndify(audio,'f15d0w06fvG7Ta1TT2svRQ==','IdqjZtBCikgZsU6h11a5TmRaYvMjMYJ0T-z76uHegFnIbknNCMjEDsbkRk-hL02aU_UXjIYQ1Zb0i7XKh9Jh0g=='))
+        print(r.recognize_houndify(audio, client_id, client_key))
         # Play the recognized audio
         play(AudioSegment.from_mp3(beep))
-        return r.recognize_houndify(audio,'f15d0w06fvG7Ta1TT2svRQ==','IdqjZtBCikgZsU6h11a5TmRaYvMjMYJ0T-z76uHegFnIbknNCMjEDsbkRk-hL02aU_UXjIYQ1Zb0i7XKh9Jh0g==')
+        return r.recognize_houndify(audio, client_id, client_key)
     except sr.UnknownValueError:
         speak('Voice not clear! Please repeat!')
     except sr.RequestError:
@@ -417,8 +424,6 @@ def main():
                 save_mic('mic', m)
                 speak(f"{choice(greetings)}, {data['name']}!")
     else:
-        m = get_mics()
-        save_mic('mic', m)
         speak("Hey there! I am Vist, your virtual and personal assistant! Can you please enter your name?")
         name = input("? ")
         speak(f'That\'s a nice name, {name}!')

@@ -219,7 +219,6 @@ def weather_api():
     speak(f"Visibility is {res['visibility']}")
     speak(f"Wind speed is {wind['speed']} kilometres per hour")
     speak(f"Wind degree is {wind['deg']} degrees")
-    speak(f"MOST IMPORTANT STEP IS ID. THE ID IS {res['id']}")
     pass
 
 

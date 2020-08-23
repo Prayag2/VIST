@@ -427,6 +427,8 @@ def main():
                 save_mic('mic', m)
                 speak(f"{choice(greetings)}, {data['name']}!")
     else:
+        m = get_mics()
+        save_mic('mic', m)
         speak("Hey there! I am Vist, your virtual and personal assistant! Can you please enter your name?")
         name = input("? ")
         speak(f'That\'s a nice name, {name}!')
